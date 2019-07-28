@@ -18,6 +18,7 @@ import itertools
 
 # csv data
 csv_data_file = Path("./scratch/__2019.csv")
+#csv_data_file = Path("./data/__2019.csv")
 
 # create directory (and subdirectory if NO exist)    
 local_scratch_dir = Path("./scratch/")
@@ -106,13 +107,14 @@ def get_csv_as_dictionary(csv_data_file):
 
         low_val_F = min(fd)
         hi_val_F = max(fd)
-        av_val_F = sum(fd) / len(fd)
+        av_val_F = round(sum(fd) / len(fd),2)
         low_val_H = min(hd)
         hi_val_H = max(hd)
-        av_val_H = sum(hd) / len(hd)
+        av_val_H = round(sum(hd) / len(hd),2)
 
-        print(f"FAT delta {low_val_F}".ljust(20) + f"< {av_val_F} >".ljust(10) + f"{hi_val_F}")
-        print(f"H2O delta {low_val_F}".ljust(20) + f"< {av_val_F} >".ljust(10) + f"{hi_val_F}")
+        print(f"FAT delta {low_val_F}".ljust(20) + f"< {av_val_F} >".ljust(10) + f"{hi_val_F}".rjust(10))
+        print(f"H2O delta {low_val_H}".ljust(20) + f"< {av_val_H} >".ljust(10) + f"{hi_val_H}".rjust(10))
+        print("\n")
                     
 
     logging.debug(f">---------------------------------------- DICTIONARY LOADED >------------")
