@@ -53,18 +53,24 @@ logging.info("- - - - - - - - - - -INFO <")
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 def get_csv_as_dictionary(csv_data_file):
 
-    sql_dict = {}
+    dict_of_days = {}
+    # { 'weekday': { 'FAT delta': [1,2,3,-1,etc],
+    #                'H2O delta': [[1,2,3,-1,etc]] }
+    # }
+    
+    weekdays = [ 'Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday']    
+
+    for day in weekdays:
+        dict_of_days[day] = {'FAT delta':[],
+                             'H2O delta':[]}
+        
 
     with open(csv_data_file) as csv_to_dict_file:    
         csv_reader = csv.DictReader(csv_to_dict_file, delimiter=',')        
         logging.debug(f"TYPE: csv_reader {type(csv_reader)}")    
-        
-        entry = {}
-    
-        entries = 0
-        
+                
         for row in csv_reader:
-            entry = {}                          # create a new dictionary for each entry
+            
             logging.debug(f"\n\nTYPE: row {type(row)}")    
             logging.debug(row)
             
@@ -72,6 +78,9 @@ def get_csv_as_dictionary(csv_data_file):
             logging.debug(row['Day'])
             logging.debug(row['FAT delta'])
             logging.debug(row['H2O delta'])
+            
+            dict_of_days[row['Day']]['FAT delta'].append(row['FAT delta'])            
+            dict_of_days[row['Day']]['H2O delta'].append(row['H2O delta'])
             
             #for col_key in csv_reader.fieldnames:                
             #    entry[col_key] = row[col_key]   # create and info dictionary    
@@ -82,12 +91,33 @@ def get_csv_as_dictionary(csv_data_file):
 
         
     logging.debug("----- reponse ------------------------------------------------------------")
-    # logging.debug(sql_dict.__class__.__name__)
-    # logging.debug(type(sql_dict))
-    # logging.debug(f"ENTRIES: {len(sql_dict)} 0-{len(sql_dict)-1}")
+    
+    for day in dict_of_days:
+        #low_val = min()
+        print(f">> {day} >")
+        dict_of_days[day]['FAT delta'] = list(filter(None, dict_of_days[day]['FAT delta']))  # strip out blanks
+        dict_of_days[day]['H2O delta'] = list(filter(None, dict_of_days[day]['H2O delta']))
+        
+        dict_of_days[day]['FAT delta'] = [float(x) for x in dict_of_days[day]['FAT delta']] # convert to ints
+        dict_of_days[day]['H2O delta'] = [float(x) for x in dict_of_days[day]['H2O delta']]
+        
+        fd = dict_of_days[day]['FAT delta']
+        hd = dict_of_days[day]['H2O delta']
+
+        low_val_F = min(fd)
+        hi_val_F = max(fd)
+        av_val_F = sum(fd) / len(fd)
+        low_val_H = min(hd)
+        hi_val_H = max(hd)
+        av_val_H = sum(hd) / len(hd)
+
+        print(f"FAT delta {low_val_F}".ljust(20) + f"< {av_val_F} >".ljust(10) + f"{hi_val_F}")
+        print(f"H2O delta {low_val_F}".ljust(20) + f"< {av_val_F} >".ljust(10) + f"{hi_val_F}")
+                    
+
     logging.debug(f">---------------------------------------- DICTIONARY LOADED >------------")
 
-    return sql_dict
+    return dict_of_days
 
 
 
