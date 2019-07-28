@@ -68,6 +68,11 @@ def get_csv_as_dictionary(csv_data_file):
             logging.debug(f"\n\nTYPE: row {type(row)}")    
             logging.debug(row)
             
+            #[('Day', 'Saturday') ('FAT delta', '0.6'), ('H2O delta', '-0.7')]
+            logging.debug(row['Day'])
+            logging.debug(row['FAT delta'])
+            logging.debug(row['H2O delta'])
+            
             #for col_key in csv_reader.fieldnames:                
             #    entry[col_key] = row[col_key]   # create and info dictionary    
     
