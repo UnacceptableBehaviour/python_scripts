@@ -12,6 +12,8 @@
 # 
 from pathlib import Path    # working with paths - # https://docs.python.org/3/library/pathlib.html
 import logging              # include various levels of debugging - https://docs.python.org/3/howto/logging.html
+import csv
+import itertools
 
 
 # csv data
@@ -44,6 +46,43 @@ logging.info("- - - - - - - - - - -INFO <")
 #logging.critical("- - - - - - - - -CRITICAL <")
 
 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#
+# load a csv file into a list of dictionaries
+#
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+def get_csv_as_dictionary(csv_data_file):
+
+    sql_dict = {}
+
+    with open(csv_data_file) as csv_to_dict_file:    
+        csv_reader = csv.DictReader(csv_to_dict_file, delimiter=',')        
+        logging.debug(f"TYPE: csv_reader {type(csv_reader)}")    
+        
+        entry = {}
+    
+        entries = 0
+        
+        for row in csv_reader:
+            entry = {}                          # create a new dictionary for each entry
+            logging.debug(f"\n\nTYPE: row {type(row)}")    
+            logging.debug(row)
+            
+            #for col_key in csv_reader.fieldnames:                
+            #    entry[col_key] = row[col_key]   # create and info dictionary    
+    
+            #sql_dict[entries] = entry
+            
+            #entries +=1
+
+        
+    logging.debug("----- reponse ------------------------------------------------------------")
+    # logging.debug(sql_dict.__class__.__name__)
+    # logging.debug(type(sql_dict))
+    # logging.debug(f"ENTRIES: {len(sql_dict)} 0-{len(sql_dict)-1}")
+    logging.debug(f">---------------------------------------- DICTIONARY LOADED >------------")
+
+    return sql_dict
 
 
 
@@ -52,7 +91,7 @@ def display_csv_data_to_console(csv):
     logging.debug("CSV data raw:")
     logging.debug("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ")
 
-
+    
     
     logging.debug("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ")
 
@@ -66,4 +105,6 @@ if __name__ == '__main__':
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     #
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    display_csv_data_to_console()
+    #display_csv_data_to_console()
+    
+    get_csv_as_dictionary(csv_data_file)
