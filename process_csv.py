@@ -1,15 +1,8 @@
 #! /usr/bin/env python
-
+# 3.7
 # process csv data display in chart?
 
-# import os                   # chdir(dir), getcwd
-# import subprocess           # subprocess.run(command, arg)
-# import re                   # regular expresions
-# import json                 # json parsing
-# 
-# import glob                 
-# from pprint import pprint   # giza a look
-# 
+
 from pathlib import Path    # working with paths - # https://docs.python.org/3/library/pathlib.html
 import logging              # include various levels of debugging - https://docs.python.org/3/howto/logging.html
 import csv
@@ -17,14 +10,15 @@ import itertools
 
 
 # csv data
-csv_data_file = Path("./scratch/__2019.csv")
-#csv_data_file = Path("./data/__2019.csv")
+csv_data_file = Path("./scratch/__2019.csv")    # large
+#csv_data_file = Path("./data/__2019.csv")      # test data
 
 # create directory (and subdirectory if NO exist)    
 local_scratch_dir = Path("./scratch/")
 local_scratch_dir.mkdir(parents=True, exist_ok=True)
 
 # = = LOGGING COOKBOOK: https://docs.python.org/3/howto/logging-cookbook.html
+
 # configure basic logging - create new file each time
 #logging.basicConfig(filename='scratch/process_csv.log', filemode='w', level=logging.INFO, format='%(asctime)s %(message)s')
 
@@ -49,10 +43,11 @@ logging.info("- - - - - - - - - - -INFO <")
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #
-# load a csv file into a list of dictionaries
+# load csv file extract fat and water delta information
+#   list by day Sun-Sat Min, average, max for each
 #
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-def get_csv_as_dictionary(csv_data_file):
+def get_max_av_min_for_fat_and_water_delts_by_day(csv_data_file):
 
     dict_of_days = {}
     # { 'weekday': { 'FAT delta': [1,2,3,-1,etc],
@@ -62,48 +57,41 @@ def get_csv_as_dictionary(csv_data_file):
     weekdays = [ 'Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday']    
 
     for day in weekdays:
-        dict_of_days[day] = {'FAT delta':[],
-                             'H2O delta':[]}
+        dict_of_days[day] = {'FAT delta':[],        # store fat delta data as list for each day
+                             'H2O delta':[]}        # same for water
         
 
     with open(csv_data_file) as csv_to_dict_file:    
-        csv_reader = csv.DictReader(csv_to_dict_file, delimiter=',')        
+        csv_reader = csv.DictReader(csv_to_dict_file, delimiter=',')        # import csv 
         logging.debug(f"TYPE: csv_reader {type(csv_reader)}")    
                 
         for row in csv_reader:
             
-            logging.debug(f"\n\nTYPE: row {type(row)}")    
-            logging.debug(row)
-            
-            #[('Day', 'Saturday') ('FAT delta', '0.6'), ('H2O delta', '-0.7')]
-            logging.debug(row['Day'])
-            logging.debug(row['FAT delta'])
-            logging.debug(row['H2O delta'])
-            
-            dict_of_days[row['Day']]['FAT delta'].append(row['FAT delta'])            
+            logging.debug(f"\n\nTYPE: row {type(row)}")     # row <class 'collections.OrderedDict'>
+            logging.debug(row)  #[('Day', 'Saturday') ('FAT delta', '0.6'), ('H2O delta', '-0.7')]
+                        
+            logging.debug(row['Day'])                       # DEBUG:root:Wednesday
+            logging.debug(row['FAT delta'])                 # DEBUG:root:-0.4
+            logging.debug(row['H2O delta'])                 # DEBUG:root:-0.1
+
+            dict_of_days[row['Day']]['FAT delta'].append(row['FAT delta'])      # build lists
             dict_of_days[row['Day']]['H2O delta'].append(row['H2O delta'])
             
-            #for col_key in csv_reader.fieldnames:                
-            #    entry[col_key] = row[col_key]   # create and info dictionary    
-    
-            #sql_dict[entries] = entry
-            
-            #entries +=1
-
         
-    logging.debug("----- reponse ------------------------------------------------------------")
+    logging.info("----- reponse ------------------------------------------------------------")
     
     for day in dict_of_days:
-        #low_val = min()
         print(f">> {day} >")
-        dict_of_days[day]['FAT delta'] = list(filter(None, dict_of_days[day]['FAT delta']))  # strip out blanks
-        dict_of_days[day]['H2O delta'] = list(filter(None, dict_of_days[day]['H2O delta']))
         
-        dict_of_days[day]['FAT delta'] = [float(x) for x in dict_of_days[day]['FAT delta']] # convert to ints
-        dict_of_days[day]['H2O delta'] = [float(x) for x in dict_of_days[day]['H2O delta']]
-        
-        fd = dict_of_days[day]['FAT delta']
+        fd = dict_of_days[day]['FAT delta']     # for readability
         hd = dict_of_days[day]['H2O delta']
+
+        fd = list(filter(None, fd))             # strip out blanks
+        hd = list(filter(None, hd))
+        
+        fd = [float(x) for x in fd]             # convert to floats
+        hd = [float(x) for x in hd]
+        
 
         low_val_F = min(fd)
         hi_val_F = max(fd)
@@ -117,7 +105,7 @@ def get_csv_as_dictionary(csv_data_file):
         print("\n")
                     
 
-    logging.debug(f">---------------------------------------- DICTIONARY LOADED >------------")
+    logging.info(f">---------------------------------------- DICTIONARY LOADED >------------")
 
     return dict_of_days
 
@@ -144,4 +132,4 @@ if __name__ == '__main__':
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     #display_csv_data_to_console()
     
-    get_csv_as_dictionary(csv_data_file)
+    dod = get_max_av_min_for_fat_and_water_delts_by_day(csv_data_file)
