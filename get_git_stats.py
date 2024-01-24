@@ -190,28 +190,28 @@ if repo_merged_summary:
 # y.green   d.blue          purple      or.red
 
 # not working posible incorrect escape sequences for zsh ?  ??
-def rgb(r, g, b, text):
-    return f"\033[38;2;{r};{g};{b}m{text}\033[0m"
+# def rgb(r, g, b, text):
+#     return f"\033[38;2;{r};{g};{b}m{text}\033[0m"
 
-# Convert your hex color to RGB
-hex_color = "0200FF"        # comes out "000000"
-r, g, b = int(hex_color[:2], 16), int(hex_color[2:4], 16), int(hex_color[4:], 16)
-print(rgb(r, g, b, "Supposed to be deep blue"))
+# # Convert your hex color to RGB
+# hex_color = "0200FF"        # comes out "000000"
+# r, g, b = int(hex_color[:2], 16), int(hex_color[2:4], 16), int(hex_color[4:], 16)
+# print(rgb(r, g, b, "Supposed to be deep blue"))
 
-# Convert your hex color to RGB
-hex_color = "AFAD24"        # comes out "ABDFE4"
-r, g, b = int(hex_color[:2], 16), int(hex_color[2:4], 16), int(hex_color[4:], 16)
-print(rgb(r, g, b, "Supposed to be yellow green"))
+# # Convert your hex color to RGB
+# hex_color = "AFAD24"        # comes out "ABDFE4"
+# r, g, b = int(hex_color[:2], 16), int(hex_color[2:4], 16), int(hex_color[4:], 16)
+# print(rgb(r, g, b, "Supposed to be yellow green"))
 
-# Convert your hex color to RGB
-hex_color = "B600FF"        # comes out "000000"
-r, g, b = int(hex_color[:2], 16), int(hex_color[2:4], 16), int(hex_color[4:], 16)
-print(rgb(r, g, b, "Supposed to be purple"))
+# # Convert your hex color to RGB
+# hex_color = "B600FF"        # comes out "000000"
+# r, g, b = int(hex_color[:2], 16), int(hex_color[2:4], 16), int(hex_color[4:], 16)
+# print(rgb(r, g, b, "Supposed to be purple"))
 
-# Convert your hex color to RGB
-hex_color = "FF3D00"        # comes out "000000"
-r, g, b = int(hex_color[:2], 16), int(hex_color[2:4], 16), int(hex_color[4:], 16)
-print(rgb(r, g, b, "Supposed to be orange red"))
+# # Convert your hex color to RGB
+# hex_color = "FF3D00"        # comes out "000000"
+# r, g, b = int(hex_color[:2], 16), int(hex_color[2:4], 16), int(hex_color[4:], 16)
+# print(rgb(r, g, b, "Supposed to be orange red"))
 
 
 
